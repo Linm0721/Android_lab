@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         RB2 = (RadioButton)findViewById(R.id.radioButton);
         Login = (Button)findViewById(R.id.button2);
         Register = (Button)findViewById(R.id.button);
+
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("上传头像");
         final String[] Array = new String[]{"拍摄","从相册选择"};
@@ -65,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         });
         dialog.setNegativeButton("取消",
                 new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(MainActivity.this, "您选择了[取消]", Toast.LENGTH_SHORT).show();
@@ -76,13 +76,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 builder.show();
-
             }
         });
-
-
-
-
 
 
         RG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
@@ -90,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedID){
 
                     if(checkedID == RB1.getId()){
-                     //   Toast.makeText(MainActivity.this, "您选择了学生", Toast.LENGTH_SHORT).show();
+
                         Snackbar.make(RG, "您选择了学生", Snackbar.LENGTH_SHORT)
                                 .setAction("确认", new View.OnClickListener(){
                                     @Override
@@ -103,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                                 .show();
                       }
                       else if(checkedID == RB2.getId()){
-                       // Toast.makeText(MainActivity.this,"您选择了教职工",Toast.LENGTH_SHORT).show();
+
                         Snackbar.make(RG, "您选择了教职工", Snackbar.LENGTH_SHORT)
                              .setAction("确认",new View.OnClickListener(){
                                 @Override
@@ -124,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v){
                 String number = EditNum.getText().toString();
                 String password = EditPW.getText().toString();
+                Num.setErrorEnabled(false);
+                PW.setErrorEnabled(false);
                 if(number.isEmpty()){
                     Num.setErrorEnabled(true);
                     Num.setError("学号不能为空");
