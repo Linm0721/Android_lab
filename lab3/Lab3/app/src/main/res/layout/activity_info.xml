@@ -24,6 +24,7 @@
             android:layout_height="35dp"
             android:id="@+id/Back"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:background="@mipmap/back" />
 
         <TextView
@@ -63,7 +64,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/telephone"
+                android:id="@+id/price"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="10dp"
                 android:textSize="20sp"
@@ -75,8 +76,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/info1"
-                android:layout_alignStart="@+id/telephone"
-                android:layout_below="@+id/telephone"
+                android:layout_alignStart="@+id/price"
+                android:layout_below="@+id/price"
                 android:textSize="15sp"
                 android:layout_marginTop="8dp"
                 android:textColor="#8A000000" />
@@ -94,9 +95,9 @@
             <Button
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:id="@+id/chat"
+                android:id="@+id/shopcar"
                 android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/telephone"
+                android:layout_alignTop="@+id/price"
                 android:layout_marginEnd="15dp"
                 android:layout_marginTop="8dp"
                 android:background="@mipmap/shoplist" />
@@ -104,9 +105,9 @@
             <View
                 android:layout_width="2dp"
                 android:layout_height="40dp"
-                android:layout_alignTop="@+id/chat"
+                android:layout_alignTop="@+id/shopcar"
                 android:layout_marginEnd="18dp"
-                android:layout_toStartOf="@+id/chat"
+                android:layout_toStartOf="@+id/shopcar"
                 android:background="#1E000000" />
 
             <View

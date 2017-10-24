@@ -33,7 +33,7 @@ public class InfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_info);
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.Top);
      /**** new ****/
-        String [] names = new String[] {"Enchated Forest", "Arla Milk", "Devondale Milk",
+   /*     String [] names = new String[] {"Enchated Forest", "Arla Milk", "Devondale Milk",
                 "Kindle Oasis", "waitrose 早餐麦片", "Mcvitie's 饼干",
                 "Ferrero Rocher", "Maltesers", "Lindt", "Borggreve"};
         String [] prices = new String[] {"¥ 5.00", "¥ 59.00", "¥ 79.00", "¥ 2399.00",
@@ -48,7 +48,12 @@ public class InfoActivity extends AppCompatActivity {
         for(int i=0; i < names.length; i++){
             Info temp = new Info(names[i],prices[i], types[i], infos[i], background[i]);
             mProductDetailsMap.put(names[i], temp);
-        }
+
+        }*/
+
+     for(int i=0; i<MainActivity.Infos.size(); i++){
+         mProductDetailsMap.put(MainActivity.Infos.get(i).getName(),MainActivity.Infos.get(i));
+     }
 
         Bundle bundle = getIntent().getExtras();
         String ProductName = bundle.getString("name");
@@ -108,17 +113,17 @@ public class InfoActivity extends AppCompatActivity {
         });
 
 
-        TextView info1 = (TextView) findViewById(R.id.info1);
-           info1.setText(p.getinfo1());
+        TextView type = (TextView) findViewById(R.id.info1);
+           type.setText(p.getType());
 
-        TextView info2 = (TextView) findViewById(R.id.info2);
-          info2.setText(p.getFrom());
+        TextView info = (TextView) findViewById(R.id.info2);
+          info.setText(p.getInfo());
 
         TextView name = (TextView) findViewById(R.id.Name);
           name.setText(p.getName());
 
-        TextView tel = (TextView) findViewById(R.id.telephone);
-         tel.setText(p.getTel());
+        TextView price = (TextView) findViewById(R.id.price);
+         price.setText(p.getPrice());
 
         /********  original    end **********/
 
@@ -149,14 +154,14 @@ public class InfoActivity extends AppCompatActivity {
         });
 
         /*购物车*/
-        Button shopcart = (Button) findViewById(R.id.chat);
+        Button shopcart = (Button) findViewById(R.id.shopcar);
         shopcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Map<String, Object> temp = new LinkedHashMap<>();
-                temp.put("cycle", p.getcycle());
+                temp.put("FirstLetter", p.getFirstLetter());
                 temp.put("name",p.getName());
-                temp.put("price",p.getTel());
+                temp.put("price",p.getPrice());
                 MainActivity.shoplist.add(temp);
                 Toast.makeText(InfoActivity.this, "商品已添加到购物车", Toast.LENGTH_SHORT).show();
             }

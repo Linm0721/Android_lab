@@ -43,7 +43,7 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder>{
                 @Override
                 public boolean onLongClick(View v){
                     mOnItemClickListener.onLongClick(holder.getAdapterPosition());
-                    return false;
+                    return true;
                 }
             });
         }

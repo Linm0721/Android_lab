@@ -9,13 +9,18 @@ import java.io.Serializable;
 /*  存储相应的数据  */
 public class Info implements Serializable {
 
-    public Info(String name, String tel, String info1, String from, String background) {
-        this.background = background;
-        this.info1 = info1;
-        this.from = from;
-        this.name = name;
-        this.tel = tel;
+    private String name;
+    private String price;
+    private String type;
+    private String info;
+    private String background;
 
+    public Info(String name, String price, String type, String info, String background) {
+        this.name = name;
+        this.price = price;
+        this.type = type;
+        this.info = info;
+        this.background = background;
     }
 
 
@@ -35,42 +40,34 @@ public class Info implements Serializable {
         this.name = name;
     }
 
-    public String getFrom() {
-        return from;
+    public String getInfo() {
+        return info;
     }
 
-    public void setFrom(String from) {
-        this.from = from;
+    public void setInfo(String info) {this.info = info;}
+
+    public String getPrice() {
+        return price;
     }
 
-    public String getTel() {
-        return tel;
+    public void setPrice(String price) {this.price = price;}
+
+    public String getType() {
+        return type;
     }
 
-    public void setTel(String tel) {
-        this.tel = tel;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getinfo1() {
-        return info1;
-    }
-
-    public void setinfo1(String info1) {
-        this.info1 = info1;
-    }
-
-    public char getcycle() {
+    public char getFirstLetter() {
         char first = name.charAt(0);
         if (first >= 97 && first <= 122) {
             first -= 32;
         }
         return first;
+
     }
 
-    private String background;
-    private String info1;
-    private String from;
-    private String name;
-    private String tel;
 
 }
