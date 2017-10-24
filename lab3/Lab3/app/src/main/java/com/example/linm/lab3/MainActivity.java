@@ -26,7 +26,16 @@ public class MainActivity extends AppCompatActivity {
     private List<String> mDatas;
     private CommonAdapter commonAdapter;
     protected List<Map<String, Object>> data = new ArrayList<>();
-    protected List<Map<String, Object>> shoplist = new ArrayList<>();
+    public static List<Map<String, Object>> shoplist = new ArrayList<Map<String, Object>>(){{
+        Map<String, Object> t = new LinkedHashMap<>();
+        t.put("cycle", "*");
+        t.put("name", "购物车");
+        t.put("price","价格");
+        add(t);
+    }
+
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,76 +137,34 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(commonAdapter);
         commonAdapter.setOnItemClickListener(new CommonAdapter.OnItemClickListener(){
            @Override
+           //商品列表单击
             public  void onClick(int position){
                final int p = position;
                Intent intent = new Intent(MainActivity.this, InfoActivity.class);
-               Info temp = Infos.get(p);
-               intent.putExtra("Info", temp);
+               Bundle bundle = new Bundle();
+               String productname = data.get(position).get("name").toString();
+               bundle.putString("name",productname);
+               intent.putExtras(bundle);
                startActivity(intent);
            }
+           @Override
+           //商品列表长按
             public  void onLongClick( int position){
-                final int p = position;
-                AlertDialog.Builder message = new AlertDialog.Builder(MainActivity.this);
-                message.setTitle("移除商品");
-                message.setMessage("从购物车移除" + Infos.get(position).getName());
-                message.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Infos.remove(p);
-                        data.remove(p);
-                        commonAdapter.removeItem(p);
-                        Toast.makeText(MainActivity.this, "移除第i个商品", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                message.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
-                });
-                message.create().show();
+
+               commonAdapter.removeItem(position);
+               Toast.makeText(MainActivity.this, "移除第"+position+"个商品", Toast.LENGTH_SHORT).show();
+
 
             }
 
         });
-        /*  mRecyclerView长按事件  */
-     /*   mRecyclerView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                AlertDialog.Builder message = new AlertDialog.Builder(MainActivity.this);
-                message.setTitle("移除商品");
-                message.setMessage("从购物车移除" + Infos.get(position).getName());
-                message.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Infos.remove(position);
-                        data.remove(position);
-                  //      mRecyclerView.notifyDataSetChanged();
-                        Toast.makeText(MainActivity.this, "移除第i个商品", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                message.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
-                });
-                message.create().show();
-                return true;
-            }
-        });*/
-
 
         /***********/
 
         /*购物车 listview实现*/
-        final List<Map<String, Object>> shoplist = new ArrayList<>();
-        Map<String, Object> t = new LinkedHashMap<>();
-        t.put("cycle", "*");
-        t.put("name", "购物车");
-        t.put("price","价格");
-        shoplist.add(t);
-        for (int i = 0; i < 5; i++) {
-            Map<String, Object> temp = new LinkedHashMap<>();
-            temp.put("cycle", cycle[i]);
-            temp.put("name", name[i]);
-            temp.put("price",price[i]);
-            shoplist.add(temp);
-        }
+    //    final List<Map<String, Object>> shoplist = new ArrayList<>();
+
+
         final ListView LV = (ListView) findViewById(R.id.list);
         final SimpleAdapter simpleListAdapter = new SimpleAdapter(this, shoplist, R.layout.shoplistinfo,
                 new String[]{"cycle","name","price"}, new int[]{R.id.cycle, R.id.name,R.id.price});
@@ -206,8 +173,10 @@ public class MainActivity extends AppCompatActivity {
         LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(MainActivity.this, InfoActivity.class);
-                Info temp = Infos.get(i);
-                intent.putExtra("Info", temp);
+                Bundle bundle = new Bundle();
+                String productname = shoplist.get(i).get("name").toString();
+                bundle.putString("name",productname);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
 
@@ -217,22 +186,25 @@ public class MainActivity extends AppCompatActivity {
         LV.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                AlertDialog.Builder message = new AlertDialog.Builder(MainActivity.this);
-                message.setTitle("移除商品");
-                message.setMessage("从购物车移除" + Infos.get(position).getName());
-                message.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Infos.remove(position);
-                        shoplist.remove(position);
-                        simpleListAdapter.notifyDataSetChanged();
-                        Toast.makeText(MainActivity.this, "移除第i个商品", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                message.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
-                });
-                message.create().show();
+                if(position!=0){
+                    AlertDialog.Builder message = new AlertDialog.Builder(MainActivity.this);
+                    message.setTitle("移除商品");
+                    message.setMessage("从购物车移除" + shoplist.get(position).get("name").toString());
+                    message.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            //  Infos.remove(position);
+                            shoplist.remove(position);
+                            simpleListAdapter.notifyDataSetChanged();
+
+                        }
+                    });
+                    message.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    });
+                    message.create().show();
+                }
+
                 return true;
             }
         });
