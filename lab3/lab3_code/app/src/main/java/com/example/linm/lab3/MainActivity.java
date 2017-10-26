@@ -21,9 +21,12 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
+
 public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
-    private List<String> mDatas;
+  //  private List<String> mDatas;
     private CommonAdapter commonAdapter;
     protected List<Map<String, Object>> data = new ArrayList<>();
     public static List<Map<String, Object>> shoplist = new ArrayList<Map<String, Object>>(){{
@@ -33,9 +36,9 @@ public class MainActivity extends AppCompatActivity {
         t.put("price","价格");
         add(t);
     }
-
     };
-    /*  为每一项数据创建一个对象，并添加在List中  */
+    public static SimpleAdapter simpleListAdapter;
+    /* 创建商品对象list  */
     public static List<Info> Infos = new ArrayList<Info>() {{
         add(new Info("Enchated Forest", "¥ 5.00", "作者", "Johanna Basford", "1"));
         add(new Info("Arla Milk", "¥ 59.00", "产地", "德国", "2"));
@@ -53,23 +56,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //商品列表list
         final List<Map<String, Object>> data = new ArrayList<>();
 
+        //首字母list
         char[] FirstLetter = new char[Infos.size()];
         for (int i = 0; i < Infos.size(); i++) {
             char x = Infos.get(i).getFirstLetter();
             FirstLetter[i] = x;
         }
+
+        //名字list
         String[] name = new String[Infos.size()];
         for (int i = 0; i < Infos.size(); i++) {
             String x = Infos.get(i).getName();
             name[i] = x;
         }
+
+        //价格list
         String[] price = new String[Infos.size()];
         for (int i = 0; i < Infos.size(); i++) {
             String x = Infos.get(i).getPrice();
             price[i] = x;
         }
+
+        //商品列表list添加
         for (int i = 0; i < Infos.size(); i++) {
             Map<String, Object> temp = new LinkedHashMap<>();
             temp.put("FirstLetter", FirstLetter[i]);
@@ -81,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView = (RecyclerView)findViewById(R.id.recycle_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        //recyclerView的适配器
         commonAdapter = new CommonAdapter<Map<String, Object>>(this, R.layout.info,data) {
             @Override
             public void convert(ViewHolder holder, Map<String, Object> s) {
@@ -92,26 +103,30 @@ public class MainActivity extends AppCompatActivity {
             }
 
         };
+        //没有设置动画
+       // mRecyclerView.setAdapter(commonAdapter);
+        //设置动画
+        ScaleInAnimationAdapter animationAdapter = new ScaleInAnimationAdapter(commonAdapter);
+        animationAdapter.setDuration(2000);
+        mRecyclerView.setAdapter(animationAdapter);
+        mRecyclerView.setItemAnimator(new OvershootInLeftAnimator());
 
-        mRecyclerView.setAdapter(commonAdapter);
         commonAdapter.setOnItemClickListener(new CommonAdapter.OnItemClickListener(){
            @Override
            //商品列表单击
             public  void onClick(int position){
-               final int p = position;
                Intent intent = new Intent(MainActivity.this, InfoActivity.class);
                Bundle bundle = new Bundle();
                String productname = data.get(position).get("name").toString();
-               bundle.putString("name",productname);
+               bundle.putString("name",productname);//属性为name，数据为productname
                intent.putExtras(bundle);
-               startActivity(intent);
+               startActivity(intent); //将intent传入
            }
            @Override
            //商品列表长按
             public  void onLongClick( int position){
                 if(position < Infos.size()){
                     commonAdapter.removeItem(position);
-             //       data.remove(position);
                     Toast.makeText(MainActivity.this, "移除第"+(position+1)+"个商品", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -125,10 +140,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         final ListView LV = (ListView) findViewById(R.id.list);
-        final SimpleAdapter simpleListAdapter = new SimpleAdapter(this, shoplist, R.layout.shoplistinfo,
+        simpleListAdapter = new SimpleAdapter(this, shoplist, R.layout.shoplistinfo,
                 new String[]{"FirstLetter","name","price"}, new int[]{R.id.FirstLetter, R.id.name,R.id.price});
         LV.setAdapter(simpleListAdapter);
-         /*  ListView单击事件  */
+         /*  购物车ListView单击事件  */
         LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i!=0) {
@@ -153,10 +168,8 @@ public class MainActivity extends AppCompatActivity {
                     message.setMessage("从购物车移除" + shoplist.get(position).get("name").toString());
                     message.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialogInterface, int i) {
-
                             shoplist.remove(position);
                             simpleListAdapter.notifyDataSetChanged();
-
                         }
                     });
                     message.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -165,11 +178,13 @@ public class MainActivity extends AppCompatActivity {
                     });
                     message.create().show();
                 }
-
                 return true;
             }
         });
+
+        //一开始将购物车设为不可见
         LV.setVisibility(View.GONE);
+
         /*购物车图标切换*/
         final FloatingActionButton convert = (FloatingActionButton) findViewById(R.id.convert);
         convert.setOnClickListener(new View.OnClickListener() {
@@ -178,14 +193,14 @@ public class MainActivity extends AppCompatActivity {
                 if (!tag1) {
                     convert.setImageResource(R.mipmap.mainpage);
                     tag1 = true;
-                    LV.setVisibility(View.VISIBLE);
-                    mRecyclerView.setVisibility(View.GONE);
+                    LV.setVisibility(View.VISIBLE);//将购物车列表设为可见
+                    mRecyclerView.setVisibility(View.GONE); //商品列表不可见
 
                 } else {
                     convert.setImageResource(R.mipmap.shoplist);
                     tag1 = false;
-                    LV.setVisibility(View.GONE);
-                    mRecyclerView.setVisibility(View.VISIBLE);
+                    LV.setVisibility(View.GONE); //购物车列表不可见
+                    mRecyclerView.setVisibility(View.VISIBLE); //商品列表可见
 
                 }
             }

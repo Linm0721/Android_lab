@@ -17,6 +17,7 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder>{
     protected int mLayoutId;
     protected List<T> mDatas;
     private OnItemClickListener mOnItemClickListener = null;
+
     public CommonAdapter(Context context, int layoutId, List<T> datas){
         mContext = context;
         mLayoutId = layoutId;
@@ -24,12 +25,15 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder>{
     }
 
     @Override
+    //创建Item视图，返回相应的ViewHolder
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType){
         ViewHolder viewHolder = ViewHolder.get(mContext, parent, mLayoutId);
         return viewHolder;
     }
+
     @Override
     public void onBindViewHolder(final ViewHolder holder,  int position){
+        //绑定数据到正确的Item视图上
         convert(holder, mDatas.get(position));
 
         if(mOnItemClickListener != null){
@@ -53,11 +57,12 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder>{
 
 
     @Override
+    //获得列表项总数
     public int getItemCount(){
         return mDatas.size();
     }
 
-
+    //删除列表项
     public void removeItem(int position){
         mDatas.remove(position);
         notifyItemRemoved(position);

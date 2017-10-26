@@ -31,47 +31,19 @@ public class InfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.Top);
-     /**** new ****/
-   /*     String [] names = new String[] {"Enchated Forest", "Arla Milk", "Devondale Milk",
-                "Kindle Oasis", "waitrose 早餐麦片", "Mcvitie's 饼干",
-                "Ferrero Rocher", "Maltesers", "Lindt", "Borggreve"};
-        String [] prices = new String[] {"¥ 5.00", "¥ 59.00", "¥ 79.00", "¥ 2399.00",
-                "¥ 179.00", "¥ 14.90", "¥ 132.59", "¥ 141.43",
-                "¥ 139.43", "¥ 28.90"};
-        String [] types = new String[] {"作者", "产地", "产地", "版本", "重量", "产地", "重量",
-                "重量", "重量", "重量"};
-        String [] infos = new String[] {"Johanna Basford", "德国", "澳大利亚", "8GB", "2Kg",
-                "英国", "300g", "118g", "249g", "640g"};
-        String [] background = new String[]{"1","2","3","4","5","6","7","8","9","10"};
+       // RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.Top);
 
-        for(int i=0; i < names.length; i++){
-            Info temp = new Info(names[i],prices[i], types[i], infos[i], background[i]);
-            mProductDetailsMap.put(names[i], temp);
 
-        }*/
-
-     for(int i=0; i<MainActivity.Infos.size(); i++){
-         mProductDetailsMap.put(MainActivity.Infos.get(i).getName(),MainActivity.Infos.get(i));
-     }
+         for(int i=0; i<MainActivity.Infos.size(); i++){
+            mProductDetailsMap.put(MainActivity.Infos.get(i).getName(),MainActivity.Infos.get(i));
+         }
 
         Bundle bundle = getIntent().getExtras();
         String ProductName = bundle.getString("name");
         final Info p = mProductDetailsMap.get(ProductName);
 
-
-     /**** new end ****/
-
-
-
-
-
-/********  original     **********/
-/*
-        final Info p = (Info) getIntent().getSerializableExtra("Info");*/
-
+        //设置图片
         ImageView img = (ImageView)findViewById(R.id.img);
-
         if(p.getBackground().equals("1")){
             img.setImageResource(R.drawable.enchatedforest);
         }
@@ -103,7 +75,20 @@ public class InfoActivity extends AppCompatActivity {
             img.setImageResource(R.drawable.borggreve);
         }
 
+        //设置名字
+        TextView name = (TextView) findViewById(R.id.Name);
+        name.setText(p.getName());
+        //设置价格
+        TextView price = (TextView) findViewById(R.id.price);
+        price.setText(p.getPrice());
+        //设置类型
+        TextView type = (TextView) findViewById(R.id.info1);
+           type.setText(p.getType());
+        //设置信息
+        TextView info = (TextView) findViewById(R.id.info2);
+          info.setText(p.getInfo());
 
+        //设置返回图标
         Button back = (Button) findViewById(R.id.Back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,22 +98,8 @@ public class InfoActivity extends AppCompatActivity {
         });
 
 
-        TextView type = (TextView) findViewById(R.id.info1);
-           type.setText(p.getType());
 
-        TextView info = (TextView) findViewById(R.id.info2);
-          info.setText(p.getInfo());
-
-        TextView name = (TextView) findViewById(R.id.Name);
-          name.setText(p.getName());
-
-        TextView price = (TextView) findViewById(R.id.price);
-         price.setText(p.getPrice());
-
-        /********  original    end **********/
-
-
-       String[] operations1 = new String[]{"更多产品信息"};
+        String[] operations1 = new String[]{"更多产品信息"};
         ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<>(this, R.layout.more, operations1);
         ListView listView1 = (ListView) findViewById(R.id.more);
         listView1.setAdapter(arrayAdapter1);
@@ -163,6 +134,7 @@ public class InfoActivity extends AppCompatActivity {
                 temp.put("name",p.getName());
                 temp.put("price",p.getPrice());
                 MainActivity.shoplist.add(temp);
+                MainActivity.simpleListAdapter.notifyDataSetChanged();
                 Toast.makeText(InfoActivity.this, "商品已添加到购物车", Toast.LENGTH_SHORT).show();
             }
         });

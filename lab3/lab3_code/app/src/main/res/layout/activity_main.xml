@@ -10,13 +10,6 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/Start">
-
-    </ListView>
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/list">
 
     </ListView>
@@ -26,7 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/recycle_view"
-        ></android.support.v7.widget.RecyclerView>
+        >
+    </android.support.v7.widget.RecyclerView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/convert"
@@ -42,8 +36,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-
-
-        ></android.support.design.widget.FloatingActionButton>
+        >
+    </android.support.design.widget.FloatingActionButton>
 
 </RelativeLayout>

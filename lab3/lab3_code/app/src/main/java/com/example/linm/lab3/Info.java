@@ -9,11 +9,11 @@ import java.io.Serializable;
 /*  存储相应的数据  */
 public class Info implements Serializable {
 
-    private String name;
-    private String price;
-    private String type;
-    private String info;
-    private String background;
+    private String name; //名字
+    private String price; // 价格
+    private String type; //类型
+    private String info; //信息
+    private String background; //背景
 
     public Info(String name, String price, String type, String info, String background) {
         this.name = name;
@@ -66,7 +66,6 @@ public class Info implements Serializable {
             first -= 32;
         }
         return first;
-
     }
 
 

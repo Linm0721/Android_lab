@@ -14,22 +14,30 @@ import android.view.ViewGroup;
  */
 
 public class ViewHolder extends RecyclerView.ViewHolder{
-    private SparseArray<View> mViews;
-    private View mConvertView;
+
+    private SparseArray<View> mViews; //存储list_Item的子View
+    private View mConvertView; //存储list_Item
+
     public ViewHolder(Context context, View itemView, ViewGroup parent){
         super(itemView);
         mConvertView = itemView;
         mViews = new SparseArray<View>();
     }
+
+    //获取viewHolder实例
     public static ViewHolder get(Context context, ViewGroup parent, int layoutId){
         View itemView = LayoutInflater.from(context).inflate(layoutId, parent, false);
         ViewHolder holder = new ViewHolder(context, itemView, parent);
         return holder;
     }
+
+    //通过id获取view
     public <T extends View> T getView(int viewId){
         View view = mViews.get(viewId);
         if(view==null){
+            //创建view
             view = mConvertView.findViewById(viewId);
+            //将view存入mViews
             mViews.put(viewId, view);
         }
         return (T) view;
