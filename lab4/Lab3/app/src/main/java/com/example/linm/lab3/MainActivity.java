@@ -23,6 +23,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
@@ -34,6 +37,7 @@ import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
+    private ListView LV;
   //  private List<String> mDatas;
     private CommonAdapter commonAdapter;
     protected List<Map<String, Object>> data = new ArrayList<>();
@@ -48,16 +52,16 @@ public class MainActivity extends AppCompatActivity {
     public static SimpleAdapter simpleListAdapter;
     /* 创建商品对象list  */
     public static List<Info> Infos = new ArrayList<Info>() {{
-        add(new Info("Enchated Forest", "¥ 5.00", "作者", "Johanna Basford", "1"));
-        add(new Info("Arla Milk", "¥ 59.00", "产地", "德国", "2"));
-        add(new Info("Devondale Milk", "¥ 79.00", "产地", "澳大利亚", "3"));
-        add(new Info("Kindle Oasis", "¥ 2399.00", "版本", "8GB", "4"));
-        add(new Info("waitrose 早餐麦片", "¥ 179.00", "重量", "2Kg", "5"));
-        add(new Info("Mcvitie's 饼干", "¥ 14.90 ", "产地", "英国", "6"));
-        add(new Info("Ferrero Rocher", "¥ 132.59", "重量", "300g", "7"));
-        add(new Info("Maltesers", "¥ 141.43", "重量", "118g", "8"));
-        add(new Info("Lindt", "¥ 139.43", "重量", "249g", "9"));
-        add(new Info("Borggreve", "¥ 28.90", "重量", "640g", "10"));
+        add(new Info("Enchated Forest", "¥ 5.00", "作者", "Johanna Basford", R.drawable.enchatedforest));
+        add(new Info("Arla Milk", "¥ 59.00", "产地", "德国",  R.drawable.arla));
+        add(new Info("Devondale Milk", "¥ 79.00", "产地", "澳大利亚", R.drawable.devondale));
+        add(new Info("Kindle Oasis", "¥ 2399.00", "版本", "8GB",  R.drawable.kindle));
+        add(new Info("waitrose 早餐麦片", "¥ 179.00", "重量", "2Kg", R.drawable.waitrose));
+        add(new Info("Mcvitie's 饼干", "¥ 14.90 ", "产地", "英国", R.drawable.mcvitie));
+        add(new Info("Ferrero Rocher", "¥ 132.59", "重量", "300g",  R.drawable.ferrero));
+        add(new Info("Maltesers", "¥ 141.43", "重量", "118g",R.drawable.maltesers));
+        add(new Info("Lindt", "¥ 139.43", "重量", "249g", R.drawable.lindt));
+        add(new Info("Borggreve", "¥ 28.90", "重量", "640g", R.drawable.borggreve));
     }};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +69,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //lab4 add
         Log.e("product_in_main","ok");
-
+        LV = (ListView) findViewById(R.id.list);
+        simpleListAdapter = new SimpleAdapter(this, shoplist, R.layout.shoplistinfo,
+                new String[]{"FirstLetter","name","price"}, new int[]{R.id.FirstLetter, R.id.name,R.id.price});
+        LV.setAdapter(simpleListAdapter);
 
         //随机数
         Random random = new Random();
@@ -75,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
         intent.setAction("MLY");
         intent.putExtra("info",random.nextInt(Infos.size()));
         sendBroadcast(intent);
+        //eventbus
+        EventBus.getDefault().register(this);
 /*
         Notification.Builder builder = new Notification.Builder(this);
         builder.setContentTitle("动态广播")
@@ -174,10 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        final ListView LV = (ListView) findViewById(R.id.list);
-        simpleListAdapter = new SimpleAdapter(this, shoplist, R.layout.shoplistinfo,
-                new String[]{"FirstLetter","name","price"}, new int[]{R.id.FirstLetter, R.id.name,R.id.price});
-        LV.setAdapter(simpleListAdapter);
+
          /*  购物车ListView单击事件  */
         LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -242,7 +248,27 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+    @Override
+    protected void onNewIntent(Intent intent){
+        Bundle bundle = getIntent().getExtras();
 
+            tag1 = true;
+            LV.setVisibility(View.VISIBLE);//将购物车列表设为可见
+            mRecyclerView.setVisibility(View.GONE); //商品列表不可见
+
+    }
     private boolean tag1 = false;
+    @Subscribe
+    public void onEventMainThread(GoodsEvent event) {
+
+        shoplist.add(event.getGoods());
+        simpleListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }
 

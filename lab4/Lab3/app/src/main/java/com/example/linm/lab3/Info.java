@@ -13,24 +13,22 @@ public class Info implements Serializable {
     private String price; // 价格
     private String type; //类型
     private String info; //信息
-    private String background; //背景
+    private int imgid;//背景
 
-    public Info(String name, String price, String type, String info, String background) {
-        this.name = name;
-        this.price = price;
-        this.type = type;
-        this.info = info;
-        this.background = background;
-    }
+public Info(String name, String price, String type, String info, int id) {
+    this.name = name;
+    this.price = price;
+    this.type = type;
+    this.info = info;
+    this.imgid = id;
+}
 
 
-    public String getBackground() {
-        return background;
-    }
 
-    public void setBackground(String background) {
-        this.background = background;
-    }
+   public int getImgid(){
+       return imgid;
+   }
+
 
     public String getName() {
         return name;

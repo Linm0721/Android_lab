@@ -35,5 +35,7 @@ dependencies {
     compile 'com.android.support:percent:25.4.0'
     compile 'jp.wasabeef:recyclerview-animators:2.2.7'
     compile 'com.android.support:support-core-utils:25.4.0'
+    compile 'org.greenrobot:eventbus:3.0.0'
+
     testCompile 'junit:junit:4.12'
 }

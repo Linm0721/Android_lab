@@ -2,6 +2,7 @@ package com.example.linm.lab3;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,6 +28,7 @@ import java.util.Map;
 public class GoodsInfoActivity extends AppCompatActivity {
     DynamicReceiver dynamicReceiver;
     private Map<String, Info> mProductDetailsMap = new HashMap<>();
+ //   public static Map<String, Info> mProductDetailsMap = new HashMap<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +54,8 @@ public class GoodsInfoActivity extends AppCompatActivity {
 
         //设置图片
         ImageView img = (ImageView)findViewById(R.id.img);
-        if(p.getBackground().equals("1")){
+        img.setImageResource(p.getImgid());
+      /*  if(p.getBackground().equals("1")){
             img.setImageResource(R.drawable.enchatedforest);
         }
         else if(p.getBackground().equals("2")){
@@ -80,7 +85,7 @@ public class GoodsInfoActivity extends AppCompatActivity {
         else if(p.getBackground().equals("10")){
             img.setImageResource(R.drawable.borggreve);
         }
-
+*/
         //设置名字
         TextView name = (TextView) findViewById(R.id.Name);
         name.setText(p.getName());
@@ -130,6 +135,9 @@ public class GoodsInfoActivity extends AppCompatActivity {
             }
         });
 
+        //购物车
+
+
         /*购物车*/
         Button shopcart = (Button) findViewById(R.id.shopcar);
         shopcart.setOnClickListener(new View.OnClickListener() {
@@ -139,8 +147,9 @@ public class GoodsInfoActivity extends AppCompatActivity {
                 temp.put("FirstLetter", p.getFirstLetter());
                 temp.put("name",p.getName());
                 temp.put("price",p.getPrice());
-                MainActivity.shoplist.add(temp);
-                MainActivity.simpleListAdapter.notifyDataSetChanged();
+          //      MainActivity.shoplist.add(temp);
+           //     MainActivity.simpleListAdapter.notifyDataSetChanged();
+                EventBus.getDefault().post(new GoodsEvent(temp));
                 Toast.makeText(GoodsInfoActivity.this, "商品已添加到购物车", Toast.LENGTH_SHORT).show();
 
                 //lab4
@@ -148,6 +157,7 @@ public class GoodsInfoActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setAction("panhouye");
                 intent.putExtra("name",p.getName());
+                intent.putExtra("imgid",p.getImgid());
                 sendBroadcast(intent);
 
 
@@ -158,74 +168,7 @@ public class GoodsInfoActivity extends AppCompatActivity {
     private boolean tag = false;
     protected void onPause() {
         super.onPause();
-
         unregisterReceiver(dynamicReceiver);
     }
-}
-class DynamicReceiver extends BroadcastReceiver {
-    @Override
-    public void onReceive(Context context, Intent intent) {
 
-        Notification.Builder builder = new Notification.Builder(context);
-
-        builder.setContentTitle("马上下单")
-                .setContentText(intent.getStringExtra("name")+"已经添加到购物车")
-                .setAutoCancel(true);
-        switch (intent.getStringExtra("name")){
-            case "Arla Milk":{
-                builder.setSmallIcon(R.drawable.arla)
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.arla));
-                break;
-            }
-            case "Borggreve":{
-                builder.setSmallIcon(R.drawable.borggreve)
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.borggreve));
-                break;
-            }
-            case "Devondale Milk":{
-                builder.setSmallIcon(R.drawable.devondale)
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.devondale));
-                break;
-            }
-            case "Enchated Forest":{
-                builder.setSmallIcon(R.drawable.enchatedforest)
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.enchatedforest));
-                break;
-            }
-            case "Ferrero Rocher":{
-                builder.setSmallIcon(R.drawable.ferrero)
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ferrero));
-                break;
-            }
-            case "Kindle Oasis":{
-                builder.setSmallIcon(R.drawable.kindle)
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.kindle));
-                break;
-            }
-            case "Lindt":{
-                builder.setSmallIcon(R.drawable.lindt)
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.lindt));
-                break;
-            }
-            case "Maltesers":{
-                builder.setSmallIcon(R.drawable.maltesers)
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.maltesers));
-                break;
-            }
-            case "Mcvitie's 饼干":{
-                builder.setSmallIcon(R.drawable.mcvitie)
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.mcvitie));
-                break;
-            }
-            case "waitrose 早餐麦片":{
-                builder.setSmallIcon(R.drawable.waitrose)
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.waitrose));
-                break;
-            }
-        }
-        Notification notify = builder.build();
-        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        int uniqueId = (int) System.currentTimeMillis();
-        manager.notify(uniqueId,notify);
-    }
 }
