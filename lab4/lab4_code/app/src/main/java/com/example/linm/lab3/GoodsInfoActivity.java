@@ -28,15 +28,15 @@ import java.util.Map;
 public class GoodsInfoActivity extends AppCompatActivity {
     DynamicReceiver dynamicReceiver;
     private Map<String, Info> mProductDetailsMap = new HashMap<>();
- //   public static Map<String, Info> mProductDetailsMap = new HashMap<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
-        // RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.Top);
+
         //lab4
         IntentFilter filter = new IntentFilter();
-        filter.addAction("panhouye");
+        filter.addAction("DynamicBroadcast");
         dynamicReceiver = new DynamicReceiver();
         //注册广播接收
         registerReceiver(dynamicReceiver,filter);
@@ -55,37 +55,7 @@ public class GoodsInfoActivity extends AppCompatActivity {
         //设置图片
         ImageView img = (ImageView)findViewById(R.id.img);
         img.setImageResource(p.getImgid());
-      /*  if(p.getBackground().equals("1")){
-            img.setImageResource(R.drawable.enchatedforest);
-        }
-        else if(p.getBackground().equals("2")){
-            img.setImageResource(R.drawable.arla);
-        }
-        else if(p.getBackground().equals("3")){
-            img.setImageResource(R.drawable.devondale);
-        }
-        else if(p.getBackground().equals("4")){
-            img.setImageResource(R.drawable.kindle);
-        }
-        else if(p.getBackground().equals("5")){
-            img.setImageResource(R.drawable.waitrose);
-        }
-        else if(p.getBackground().equals("6")){
-            img.setImageResource(R.drawable.mcvitie);
-        }
-        else if(p.getBackground().equals("7")){
-            img.setImageResource(R.drawable.ferrero);
-        }
-        else if(p.getBackground().equals("8")){
-            img.setImageResource(R.drawable.maltesers);
-        }
-        else if(p.getBackground().equals("9")){
-            img.setImageResource(R.drawable.lindt);
-        }
-        else if(p.getBackground().equals("10")){
-            img.setImageResource(R.drawable.borggreve);
-        }
-*/
+
         //设置名字
         TextView name = (TextView) findViewById(R.id.Name);
         name.setText(p.getName());
@@ -135,8 +105,6 @@ public class GoodsInfoActivity extends AppCompatActivity {
             }
         });
 
-        //购物车
-
 
         /*购物车*/
         Button shopcart = (Button) findViewById(R.id.shopcar);
@@ -147,15 +115,15 @@ public class GoodsInfoActivity extends AppCompatActivity {
                 temp.put("FirstLetter", p.getFirstLetter());
                 temp.put("name",p.getName());
                 temp.put("price",p.getPrice());
-          //      MainActivity.shoplist.add(temp);
-           //     MainActivity.simpleListAdapter.notifyDataSetChanged();
+           //   MainActivity.shoplist.add(temp);
+           //   MainActivity.simpleListAdapter.notifyDataSetChanged();
                 EventBus.getDefault().post(new GoodsEvent(temp));
                 Toast.makeText(GoodsInfoActivity.this, "商品已添加到购物车", Toast.LENGTH_SHORT).show();
 
                 //lab4
 
                 Intent intent = new Intent();
-                intent.setAction("panhouye");
+                intent.setAction("DynamicBroadcast");
                 intent.putExtra("name",p.getName());
                 intent.putExtra("imgid",p.getImgid());
                 sendBroadcast(intent);
@@ -166,8 +134,10 @@ public class GoodsInfoActivity extends AppCompatActivity {
     }
 
     private boolean tag = false;
-    protected void onPause() {
-        super.onPause();
+
+
+    protected void onDestroy() {
+        super.onDestroy();
         unregisterReceiver(dynamicReceiver);
     }
 

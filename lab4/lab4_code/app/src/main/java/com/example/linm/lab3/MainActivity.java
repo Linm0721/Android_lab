@@ -34,11 +34,11 @@ import java.util.Random;
 
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
+import java.lang.Thread.UncaughtExceptionHandler;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private ListView LV;
-  //  private List<String> mDatas;
     private CommonAdapter commonAdapter;
     protected List<Map<String, Object>> data = new ArrayList<>();
     public static List<Map<String, Object>> shoplist = new ArrayList<Map<String, Object>>(){{
@@ -52,16 +52,16 @@ public class MainActivity extends AppCompatActivity {
     public static SimpleAdapter simpleListAdapter;
     /* 创建商品对象list  */
     public static List<Info> Infos = new ArrayList<Info>() {{
-        add(new Info("Enchated Forest", "¥ 5.00", "作者", "Johanna Basford", R.drawable.enchatedforest));
-        add(new Info("Arla Milk", "¥ 59.00", "产地", "德国",  R.drawable.arla));
-        add(new Info("Devondale Milk", "¥ 79.00", "产地", "澳大利亚", R.drawable.devondale));
-        add(new Info("Kindle Oasis", "¥ 2399.00", "版本", "8GB",  R.drawable.kindle));
-        add(new Info("waitrose 早餐麦片", "¥ 179.00", "重量", "2Kg", R.drawable.waitrose));
-        add(new Info("Mcvitie's 饼干", "¥ 14.90 ", "产地", "英国", R.drawable.mcvitie));
-        add(new Info("Ferrero Rocher", "¥ 132.59", "重量", "300g",  R.drawable.ferrero));
-        add(new Info("Maltesers", "¥ 141.43", "重量", "118g",R.drawable.maltesers));
-        add(new Info("Lindt", "¥ 139.43", "重量", "249g", R.drawable.lindt));
-        add(new Info("Borggreve", "¥ 28.90", "重量", "640g", R.drawable.borggreve));
+        add(new Info("Enchated Forest", "¥ 5.00", "作者", "Johanna Basford", R.mipmap.enchatedforest));
+        add(new Info("Arla Milk", "¥ 59.00", "产地", "德国",  R.mipmap.arla));
+        add(new Info("Devondale Milk", "¥ 79.00", "产地", "澳大利亚", R.mipmap.devondale));
+        add(new Info("Kindle Oasis", "¥ 2399.00", "版本", "8GB",  R.mipmap.kindle));
+        add(new Info("waitrose 早餐麦片", "¥ 179.00", "重量", "2Kg", R.mipmap.waitrose));
+        add(new Info("Mcvitie's 饼干", "¥ 14.90 ", "产地", "英国", R.mipmap.mcvitie));
+        add(new Info("Ferrero Rocher", "¥ 132.59", "重量", "300g",  R.mipmap.ferrero));
+        add(new Info("Maltesers", "¥ 141.43", "重量", "118g",R.mipmap.maltesers));
+        add(new Info("Lindt", "¥ 139.43", "重量", "249g", R.mipmap.lindt));
+        add(new Info("Borggreve", "¥ 28.90", "重量", "640g", R.mipmap.borggreve));
     }};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,26 +79,13 @@ public class MainActivity extends AppCompatActivity {
 
         //静态广播
         Intent intent = new Intent();
-        intent.setAction("MLY");
+        intent.setAction("StaticBroadcast");
         intent.putExtra("info",random.nextInt(Infos.size()));
         sendBroadcast(intent);
         //eventbus
         EventBus.getDefault().register(this);
-/*
-        Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("动态广播")
-               .setContentText("hahahhaha")
-                .setSmallIcon(R.drawable.arla)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.arla))
-                .setAutoCancel(true);
-        NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notify = builder.build();
-        manager.notify(0,notify);*/
-/*
 
-*/
         // lab4 add end
-
 
         //商品列表list
         final List<Map<String, Object>> data = new ArrayList<>();
@@ -250,11 +237,20 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     protected void onNewIntent(Intent intent){
-        Bundle bundle = getIntent().getExtras();
-
+        final FloatingActionButton convert = (FloatingActionButton) findViewById(R.id.convert);
+        int y = intent.getIntExtra("mode",0);
+        if(y==1){
+            convert.setImageResource(R.mipmap.mainpage);
             tag1 = true;
             LV.setVisibility(View.VISIBLE);//将购物车列表设为可见
             mRecyclerView.setVisibility(View.GONE); //商品列表不可见
+        }
+        else{
+            convert.setImageResource(R.mipmap.shoplist);
+            tag1 = false;
+            LV.setVisibility(View.GONE);//将购物车列表设为可见
+            mRecyclerView.setVisibility(View.VISIBLE); //商品列表不可见
+        }
 
     }
     private boolean tag1 = false;
