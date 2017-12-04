@@ -32,10 +32,11 @@ import android.widget.Toast;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.jar.Manifest;
 
 import javax.xml.datatype.Duration;
 
-import static com.example.linm.musicbox.MusicService.MP;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -73,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
+        //获取权限
+        verifyStoragePermissions();
 
         PlayButton = (Button)findViewById(R.id.play);
         StopButton = (Button)findViewById(R.id.stop);
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
         /*动画旋转*/
         final ObjectAnimator animator = ObjectAnimator.ofFloat(Image,"rotation",0,360);
-        animator.setDuration(5000);
+        animator.setDuration(5000); //动画时间
         animator.setInterpolator(new LinearInterpolator()); //不停止
         animator.setRepeatCount(-1); //不断重复
 
@@ -108,9 +109,8 @@ public class MainActivity extends AppCompatActivity {
                 MusBinder = null;
             }
         };
-
+        //启动服务
         Intent intent = new Intent(this, MusicService.class);
-        Log.e("debug", "启动服务");
         startService(intent);
         bindService(intent,MusServConn, Context.BIND_AUTO_CREATE);
 
@@ -131,24 +131,25 @@ public class MainActivity extends AppCompatActivity {
                 }
                 //没有播放
                 if(!tag){
-                    MusicStatus.setText("Playing"); //播放状态
+                    //音乐没有播放
                     if(statusid==0){
-                        animator.start();
+                        animator.start(); //动画从头开始
                         statusid = 1;
                     }
+                    //音乐暂停播放
                     else{
-                        animator.resume();
+                        animator.resume(); //动画从当前停止时刻开始
                     }
-                    PlayButton.setText("PAUSED");
+                    MusicStatus.setText("Playing"); //播放状态
+                    PlayButton.setText("PAUSED"); //PLAY按钮
                     tag = true;
                 }
                 //正在播放
                 else{
+                    animator.pause(); //图片旋转暂停
                     MusicStatus.setText("Paused"); //播放状态
-                    animator.pause();
-                    PlayButton.setText("PLAY");
+                    PlayButton.setText("PLAY"); //PLAY按钮
                     tag = false;
-
                 }
 
             }
@@ -157,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         StopButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                MusicStatus.setText("Stopped"); //播放状态
+
                 try{
                     int code = 102;
                     Parcel data = Parcel.obtain();
@@ -169,12 +170,14 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("debug", "发送102错误");
                     e.printStackTrace();
                 }
-                animator.end();
-                PlayButton.setText("PLAY");
+                animator.end(); //图片停止旋转
+                MusicStatus.setText("Stopped"); //播放状态
+                PlayButton.setText("PLAY"); //播放按钮
                 tag = false;
                 statusid = 0;
             }
         });
+        //退出按钮
         final Intent stopIntent = new Intent(this, MusicService.class);
         QuitButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -191,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("debug", "发送103错误");
                     e.printStackTrace();
                 }
-                animator.end();
+                animator.end(); //图片停止旋转
                 statusid = 0;
                 //解除Service绑定
                 unbindService(MusServConn);
@@ -243,11 +246,32 @@ public class MainActivity extends AppCompatActivity {
                     case 123:
                         //UI更新内容
                         //更新进度条
+                        /*
                         Seekbar.setProgress(MP.getCurrentPosition());
                         Seekbar.setMax(MP.getDuration());
                         //更新时间
                         CurrTime.setText(getTimeFromInt(MP.getCurrentPosition()));
-                        Length.setText(getTimeFromInt(MP.getDuration()));
+                        Length.setText(getTimeFromInt(MP.getDuration()));*/
+                        int code = 104;
+                        Parcel data = Parcel.obtain();
+                        Parcel reply = Parcel.obtain();
+                        try{
+                            Log.e("debug", "发送104");
+                            MusBinder.transact(code,data,reply,0);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        Bundle replydata = reply.readBundle();
+                        int currpos = replydata.getInt("currpos");
+                        int duration = replydata.getInt("duration");
+                        //更新进度条
+
+                        Seekbar.setProgress(currpos);
+                        Seekbar.setMax(duration);
+                        //更新时间
+                        CurrTime.setText(getTimeFromInt(currpos));
+                        Length.setText(getTimeFromInt(duration));
+
                         break;
                 }
             }
@@ -262,8 +286,7 @@ public class MainActivity extends AppCompatActivity {
                     }catch (InterruptedException e){
                         e.printStackTrace();
                     }
-                    if(MusServConn != null ){
-
+                    if(MusServConn != null && hasPermission==true){
                         mHandler.obtainMessage(123).sendToTarget();
                     }
                 }
@@ -274,17 +297,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
     /*获取Sd卡权限相关*/
-    public void verifyStoragePermissions(Activity activity)
+    public void verifyStoragePermissions()
     {
         try {
-            if (ActivityCompat.checkSelfPermission(activity, "android.permission.READ_EXTERNAL_STORAGE") != 0)
+            if (ActivityCompat.checkSelfPermission(this, "android.permission.READ_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED)
             {
                 Log.e("debug", "此处应弹出提示框");
-                ActivityCompat.requestPermissions(activity,
-                        new String[]{"android.permission.READ_EXTERNAL_STORAGE"}, 1);
+                ActivityCompat.requestPermissions(this, new String[]{"android.permission.READ_EXTERNAL_STORAGE"},1);
+
             }else
             {
-                Log.e("debug", "成功获取权限 in verifyStoragePermissions()");
+                Log.e("debug", "成功获取权限");
                 hasPermission = true;
             }
         }
@@ -298,35 +321,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode)
-        {
-            case 1:
-                Log.e("debug", "系统回调，尝试获取权限");
-                if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    /*若用户同意app获取权限，标记可读取文件*/
-                    Log.e("debug", "成功获取权限 in onRequestPermissionsResult()");
-                    hasPermission = true;
-                }else{
-                    /*若用户拒绝app获取权限，则弹出信息提示“拒绝权限将无法使用本程序”*/
-                    Toast.makeText(this, "拒绝权限将无法使用本程序", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                break;
-            default:
-                Log.e("debug", "undefined requestCode:"+requestCode);
-                break;
+
+        Log.e("debug", "系统回调，尝试获取权限");
+        if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            //用户同意获取权限，修改hasPermission
+            Log.e("debug", "系统回调成功获取权限");
+            hasPermission = true;
+        }else{
+            //若用户拒绝获取权限
+            Toast.makeText(this, "用户拒绝权限", Toast.LENGTH_SHORT).show();
+            finish();
         }
+
     }
-    /*
-    @Override
-    public void onBackPressed() {
-        //实现Home效果
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        startActivity(intent);
-    }
-*/
+
+    //返回键实现home键效果
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode== KeyEvent.KEYCODE_BACK){

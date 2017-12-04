@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.Parcel;
@@ -13,7 +14,7 @@ import android.util.Log;
 public class MusicService extends Service {
 
     private IBinder mBinder;
-    public static  MediaPlayer MP = new MediaPlayer();
+    private MediaPlayer MP = new MediaPlayer();
 
     public MusicService() {
         try{
@@ -29,10 +30,7 @@ public class MusicService extends Service {
     }
     @Override
     public void onCreate(){
-
         super.onCreate();
-        Log.e("debug", "创建musicplayer");
-      //  MP = new MediaPlayer();
         mBinder = new MyBinder();
     }
 
@@ -51,10 +49,10 @@ public class MusicService extends Service {
                     //播放按钮，服务处理函数
                     if (MP!=null){
                         if(MP.isPlaying()){
-                            MP.pause();
+                            MP.pause(); //暂停
                         }
                         else{
-                            MP.start();
+                            MP.start(); //开始
                         }
                     }
                     break;
@@ -62,10 +60,10 @@ public class MusicService extends Service {
                 case 102:
                     //停止按钮，服务处理函数
                     if (MP != null){
-                        MP.stop();
+                        MP.stop(); //停止播放
                         try{
                             MP.prepare();
-                            MP.seekTo(0);
+                            MP.seekTo(0); //音乐回到初始状态
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -83,7 +81,11 @@ public class MusicService extends Service {
                 case 104:
                     //界面刷新，服务返回数据函数
                     int currpos = MP.getCurrentPosition();
-                    reply.writeInt(currpos);
+                    int duration = MP.getDuration();
+                    Bundle replydata = new Bundle();
+                    replydata.putInt("currpos",currpos);
+                    replydata.putInt("duration",duration);
+                    reply.writeBundle(replydata);
                     break;
 
                 case 105:
