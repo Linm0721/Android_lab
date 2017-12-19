@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+>
+    <LinearLayout
+        android:id="@+id/l1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        >
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="姓名："
+            android:textSize="18sp"
+        />
+
+        <TextView
+            android:id="@+id/editname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="呼哈哈"
+            android:textSize="18sp"
+
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/l2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/l1"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp">
+
+    <TextView
+        android:id="@+id/birth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="生日："
+        android:textSize="18sp"
+    />
+
+    <EditText
+        android:id="@+id/editbirth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ceshi"
+    />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/l3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/l2"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp">
+    <TextView
+        android:id="@+id/gift"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="礼物："
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/editgift"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+     />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/l4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/l3"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp">
+    <TextView
+        android:id="@+id/phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="电话："
+        android:textColor="#00C853"
+        android:textSize="18sp"
+     />
+
+    <TextView
+        android:id="@+id/editphone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="13763360840"
+        android:textColor="#00C853"
+        android:textSize="18sp"
+         />
+    </LinearLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>

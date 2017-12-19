@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.linm.lab8.Add">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="姓名："
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"/>
+
+    <EditText
+        android:id="@+id/editname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@+id/name"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="20dp"
+        />
+
+    <TextView
+        android:id="@+id/birth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="生日："
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name"
+        android:layout_marginTop="35dp"
+        android:layout_marginLeft="20dp"/>
+
+    <EditText
+        android:id="@+id/editbirth"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@+id/birth"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editname"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="20dp"
+        />
+
+    <TextView
+        android:id="@+id/gift"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="礼物："
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/birth"
+        android:layout_marginTop="35dp"
+        android:layout_marginLeft="20dp"/>
+
+    <EditText
+        android:id="@+id/editgift"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@+id/gift"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editbirth"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="20dp"
+        />
+
+    <Button
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="添加"
+        app:layout_constraintTop_toBottomOf="@id/gift"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="30dp"
+        android:background="#00C853"
+        android:textColor="#ffffff"/>
+
+    <Button
+        android:id="@+id/clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="清空"
+        app:layout_constraintTop_toBottomOf="@id/add"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="20dp"
+        android:background="#00C853"
+        android:textColor="#ffffff"/>
+
+
+</android.support.constraint.ConstraintLayout>
